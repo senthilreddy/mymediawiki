@@ -1,0 +1,30 @@
+db_replicaCount: 1
+
+app_replicaCount: 1
+
+db_persistentvolume_path:
+  hostPath:
+    path: /data/storage/mediawiki
+	
+db_hostpath_node:
+  nodename: node01
+  
+db_image:
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+app_replicaCount: 1
+
+app_image:
+  pullPolicy: IfNotPresent
+  tag: "v1"
+
+app_service:
+  externalIPs: 10.10.171.3
+  port: 8096
+  type: NodePort
+  
+app_autoscaling:
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80

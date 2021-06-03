@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-mediawiki
+spec:
+  replicas: {{ .Values.app_replicaCount }}
+  selector:
+    matchLabels:
+      app: my-mediawiki
+  template:
+    metadata:
+      labels:
+        app: my-mediawiki
+    spec:
+      initContainers:
+        - command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvwl my-mediawiki-db 3306 && exit 0 || sleep 3; done; exit 1"]
+          image: busybox:1.28
+          imagePullPolicy: {{ .Values.app_image.pullPolicy }}
+          name: app-init
+          securityContext:
+            runAsUser: 0
+      containers:
+        - name: my-mediawiki-container 
+          image: mediawiki:{{ .Values.app_image.tag }}
+          imagePullPolicy: {{ .Values.app_image.pullPolicy }}
+          env:
+          - name: MYSQL_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                key: MYSQL_DATABASE
+                name: my-mediawiki-db-env
+          - name: MYSQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: MYSQL_USER
+                name: my-mediawiki-user-env
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: MYSQL_PASSWORD
+                name: my-mediawiki-pwd-env
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: "1"
+            requests:
+              cpu: 500m

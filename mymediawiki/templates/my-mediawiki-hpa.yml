@@ -1,0 +1,18 @@
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: my-mediawiki-hpa
+spec:
+  minReplicas: {{ .Values.app_autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.app_autoscaling.maxReplicas }}
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: my-mediawiki
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.app_autoscaling.targetCPUUtilizationPercentage }}

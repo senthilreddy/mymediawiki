@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    name: my-mediawiki-db-env
+data:
+  MYSQL_DATABASE: wikidatabase

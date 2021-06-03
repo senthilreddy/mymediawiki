@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: my-mediawiki-db
+  name: my-mediawiki-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-mediawiki-db
+  template:
+    metadata:
+      labels:
+        service: my-mediawiki-db
+    spec:
+      containers:
+        - env:
+          - name: MYSQL_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                key: MYSQL_DATABASE
+                name: my-mediawiki-db-env
+          - name: MYSQL_USER
+            valueFrom:
+              secretKeyRef:
+                key: MYSQL_USER
+                name: my-mediawiki-user-env
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: MYSQL_PASSWORD
+                name: my-mediawiki-pwd-env
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: MYSQL_ROOT_PASSWORD
+                name: my-mediawiki-root-secret
+          name: my-mediawiki-db
+          image: mysql:{{ .Values.db_image.tag }}
+          imagePullPolicy: {{ .Values.db_image.pullPolicy }}
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+          - mountPath: /var/lib/mysql
+            name: my-mediawiki
+      restartPolicy: Always
+      volumes:
+      - name: my-mediawiki
+        persistentVolumeClaim:
+          claimName: my-mediawiki-db-pvc
