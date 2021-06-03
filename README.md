@@ -51,4 +51,5 @@ http://<ip>:<port>/mediawiki  (as mentioned in point 2, IP and port can be chang
 1. The values for Username(MYSQL_USER) and Password(MYSQL_PASSWORD) for DB access are externalised via K8s Secrets - placed in my-mediawiki-db-secret.yml file and are encrypted using base64 encoding.
 2. The database name is also externalised using K8s ConfigMap & is mentioned in my-mediawiki-db-configmap.yml file.
 3. The database has been persisted using PersistentVolume object of k8s using node hostpath & the same would be claimed using PersistentVolumeClaim as in file my-mediawiki-db-pv-pvc.yml
-4. Horizontal Pod Autoscaler(HPA) is created for the application as in file my-mediawiki-hpa.yml which takes care of autoscaling feature for the mediawiki application.
+4. Init container is added in the mediawiki app deployment file, which tests startup of MySql DB and allows mediawiki start only after its database is up and running.
+5. Horizontal Pod Autoscaler(HPA) is created for the application as in file my-mediawiki-hpa.yml which takes care of autoscaling feature for the mediawiki application.
