@@ -19,10 +19,8 @@ Use below steps to create docker image:-
 ### Deploying the stack on kubernetes
 
 * The helm chart consists of below components:
-  > mymediawiki/templates/ :
-  Contains files to create k8s objects for DB and app deployment: my-mediawiki-db-deployment.yml, my-mediawiki-db-svc.yml, my-mediawiki-db-pv-pvc.yml, my-mediawiki-db-configmap.yml, my-mediawiki-db-secret.yml, my-mediawiki-deployment.yml, my-mediawiki-svc.yml, my-mediawiki-hpa.yml
-  > mymediawiki/values.yaml : 
-  File which consists of pre-configured values that are used for deployment of the stack on k8s. The same can be modified for further generalisation/usage.
+  - **mymediawiki/templates/** : Contains files to create k8s objects for DB and app deployment: my-mediawiki-db-deployment.yml, my-mediawiki-db-svc.yml, my-mediawiki-db-pv-pvc.yml, my-mediawiki-db-configmap.yml, my-mediawiki-db-secret.yml, my-mediawiki-deployment.yml, my-mediawiki-svc.yml, my-mediawiki-hpa.yml
+  - **mymediawiki/values.yaml** : File which consists of pre-configured values that are used for deployment of the stack on k8s. The same can be modified for further generalisation/usage.
 
 1. On kubernetes cluster, execute below commands to bring up Mediawiki application in mediawiki namespace:
 - kubectl create namespace mediawiki
